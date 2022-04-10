@@ -2,9 +2,11 @@ const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 const cbullet = canvas.getContext('2d')
 
-console.log(canvas)
+canvas.width = innerWidth
+canvas.height = innerHeight
 
-const bulletSpeed = -1
+const playerSpeed = 1.5
+const bulletSpeed = -2.5
 
 class Player{
     constructor(){
@@ -45,10 +47,9 @@ class Player{
     }
 }
 
-canvas.width = innerWidth
-canvas.height = innerHeight
-
+//BackGround Here
 c.fillStyle = 'darkblue'
+
 const player = new Player()
 
 const keys = {
@@ -69,10 +70,10 @@ function animate(){
     player.update()
 
     if(keys.w.pressed && player.position.y >= 0){
-        player.velocity.y = -1
+        player.velocity.y = -playerSpeed
     }
     else if(keys.s.pressed && player.position.y <= canvas.height - player.image.height){
-        player.velocity.y = 1
+        player.velocity.y = playerSpeed
     }
     else {
         player.velocity.y = 0
@@ -87,6 +88,9 @@ function animate(){
 
 animate()
 
+//<summary>
+//Inputs
+//</summary>
 addEventListener('keydown', ({key}) => {
     console.log(key)
     switch(key){
@@ -186,3 +190,6 @@ addEventListener('keyup', ({key}) =>{
             }
     }
 })
+//<summary>
+//EndInputs
+//<summary>
