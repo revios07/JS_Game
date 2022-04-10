@@ -2,9 +2,6 @@ const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 console.log(canvas)
 
-canvas.width = innerWidth
-canvas.height = innerHeight
-
 class Player{
     constructor(){
         //Pos Middle Of Canvas Left
@@ -35,16 +32,45 @@ class Player{
         if(this.image)
             c.drawImage(this.image,this.position.x,this.position.y,this.width,this.height)
     }   
+
+    update(){
+        if(this.image){
+        this.draw()
+        this.position.y += this.velocity.y
+        }
+    }
 }
+
+canvas.width = innerWidth
+canvas.height = innerHeight
 
 c.fillStyle = 'darkblue'
 const player = new Player()
-player.draw()
+const keys = {
+    w: {
+        pressed : false
+    },
+    s: {
+        pressed : false
+    },
+    space: {
+        pressed : false
+    }
+}
 
 function animate(){
     requestAnimationFrame(animate)
     c.fillRect(0, 0, canvas.width,canvas.height)
-    player.draw()
+    player.update()
+    if(keys.w.pressed){
+        player.velocity.y = -1
+    }
+    else if(keys.s.pressed){
+        player.velocity.y = 1
+    }
+    else if(keys.space.pressed){
+        console.log("Fire")
+    }
 }
 
 animate()
@@ -56,36 +82,46 @@ addEventListener('keydown', ({key}) => {
             {
                 //Move Up
                 console.log("Up")
+                player.velocity.y = 1
+                keys.w.pressed = true;
                 break;
             }
         case 'w':
             {
                 //Move Up
                 console.log("Up")
+                player.velocity.y = 1
+                keys.w.pressed = true;
                 break;
             }
         case "ArrowDown":
             {
                 //Move Down
                 console.log("Down")
+                player.velocity.y = -1
+                keys.s.pressed = true;
                 break;
             }
         case 's':
             {
                  //Move Down
                 console.log("Down")
+                player.velocity.y = -1
+                keys.s.pressed = true;
                 break;
             }   
         case "Space":
             {
                 //Shoot
                 console.log("Shoot")
+                keys.space.pressed = true;
                 break;
             }
         case "Shift":
             {
                 //Shoot
                 console.log("Shoot")
+                keys.space.pressed = true;
                 break;
             }
     }
