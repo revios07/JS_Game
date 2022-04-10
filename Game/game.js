@@ -1,6 +1,10 @@
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
+const cbullet = canvas.getContext('2d')
+
 console.log(canvas)
+
+const bulletSpeed = -1
 
 class Player{
     constructor(){
@@ -46,6 +50,7 @@ canvas.height = innerHeight
 
 c.fillStyle = 'darkblue'
 const player = new Player()
+
 const keys = {
     w: {
         pressed : false
@@ -62,6 +67,7 @@ function animate(){
     requestAnimationFrame(animate)
     c.fillRect(0, 0, canvas.width,canvas.height)
     player.update()
+
     if(keys.w.pressed){
         player.velocity.y = -1
     }
@@ -70,6 +76,7 @@ function animate(){
     }
     else if(keys.space.pressed){
         console.log("Fire")
+        
     }
 }
 
@@ -122,6 +129,58 @@ addEventListener('keydown', ({key}) => {
                 //Shoot
                 console.log("Shoot")
                 keys.space.pressed = true;
+                break;
+            }
+    }
+})
+
+addEventListener('keyup', ({key}) =>{
+    console.log(key)
+    switch(key){
+        case  "ArrowUp":
+            {
+                //Move Up
+                console.log("Up")
+                player.velocity.y = 0
+                keys.w.pressed = false;
+                break;
+            }
+        case 'w':
+            {
+                //Move Up
+                console.log("Up")
+                player.velocity.y = 0
+                keys.w.pressed = false;
+                break;
+            }
+        case "ArrowDown":
+            {
+                //Move Down
+                console.log("Down")
+                player.velocity.y = 0
+                keys.s.pressed = false;
+                break;
+            }
+        case 's':
+            {
+                 //Move Down
+                console.log("Down")
+                player.velocity.y = 0
+                keys.s.pressed = false;
+                break;
+            }   
+        case "Space":
+            {
+                //Shoot
+                console.log("Shoot")
+                keys.space.pressed = false;
+                break;
+            }
+        case "Shift":
+            {
+                //Shoot
+                console.log("Shoot")
+                keys.space.pressed = false;
                 break;
             }
     }
