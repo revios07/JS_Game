@@ -68,15 +68,20 @@ function animate(){
     c.fillRect(0, 0, canvas.width,canvas.height)
     player.update()
 
-    if(keys.w.pressed){
+    if(keys.w.pressed && player.position.y >= 0){
         player.velocity.y = -1
     }
-    else if(keys.s.pressed){
+    else if(keys.s.pressed && player.position.y <= canvas.height - player.image.height){
         player.velocity.y = 1
     }
-    else if(keys.space.pressed){
+    else {
+        player.velocity.y = 0
+    }
+    
+
+    if(keys.space.pressed){
         console.log("Fire")
-        
+        //fireBullet()
     }
 }
 
@@ -141,7 +146,6 @@ addEventListener('keyup', ({key}) =>{
             {
                 //Move Up
                 console.log("Up")
-                player.velocity.y = 0
                 keys.w.pressed = false;
                 break;
             }
@@ -149,7 +153,6 @@ addEventListener('keyup', ({key}) =>{
             {
                 //Move Up
                 console.log("Up")
-                player.velocity.y = 0
                 keys.w.pressed = false;
                 break;
             }
@@ -157,7 +160,6 @@ addEventListener('keyup', ({key}) =>{
             {
                 //Move Down
                 console.log("Down")
-                player.velocity.y = 0
                 keys.s.pressed = false;
                 break;
             }
@@ -165,7 +167,6 @@ addEventListener('keyup', ({key}) =>{
             {
                  //Move Down
                 console.log("Down")
-                player.velocity.y = 0
                 keys.s.pressed = false;
                 break;
             }   
