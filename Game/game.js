@@ -32,9 +32,15 @@ class Player{
         c.fillRect(this.position.x,this.position.y,this.width,this.height)*/
 
         c.drawImage(this.image,this.position.x,this.position.y)
-
     }   
 }
 
 const player = new Player()
 player.draw()
+
+function animate(){
+    requestAnimationFrame(animate)
+    player.draw()
+}
+
+animate()
