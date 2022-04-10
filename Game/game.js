@@ -49,6 +49,44 @@ function animate(){
 
 animate()
 
-addEventListener('keydown', (event) => {
-    console.log("Key Downed")
+addEventListener('keydown', ({key}) => {
+    console.log(key)
+    switch(key){
+        case  "ArrowUp":
+            {
+                //Move Up
+                console.log("Up")
+                break;
+            }
+        case 'w':
+            {
+                //Move Up
+                console.log("Up")
+                break;
+            }
+        case "ArrowDown":
+            {
+                //Move Down
+                console.log("Down")
+                break;
+            }
+        case 's':
+            {
+                 //Move Down
+                console.log("Down")
+                break;
+            }   
+        case "Space":
+            {
+                //Shoot
+                console.log("Shoot")
+                break;
+            }
+        case "Shift":
+            {
+                //Shoot
+                console.log("Shoot")
+                break;
+            }
+    }
 })
