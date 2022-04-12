@@ -2,8 +2,8 @@ const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
 
-canvas.width = innerWidth
-canvas.height = innerHeight
+canvas.width = innerWidth / 1.05
+canvas.height = innerHeight / 1.05
 
 const playerSpeed = 1.5
 const bulletSpeed = 2.5
@@ -29,9 +29,15 @@ class Player{
         image.src = './img/spaceship.png'
 
         image.onload = () => {
+            const scaleSpaceShip = 1
+
             this.image = image
-            this.width = image.width
-            this.height = image.height
+            this.width = image.width * scaleSpaceShip
+            this.height = image.height * scaleSpaceShip
+            this.position = {
+                x: 0,
+                y: canvas.height / 2 - (player.height / 2)
+            }
         }
     }
 
@@ -127,7 +133,6 @@ function animate(){
     c.fillStyle = 'darkblue'
     c.fillRect(0, 0, canvas.width,canvas.height)
 
-    player.update()
     bullets.forEach(bullet => {
         bullet.update()
     });
@@ -141,9 +146,9 @@ function animate(){
     else {
         player.velocity.y = 0
     }
+    player.update()
     
     if(keys.space.pressed){
-        keys.space.pressed = false
         console.log("Fire")
         fireBullet()
         //fireBullet()
