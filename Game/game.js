@@ -5,6 +5,12 @@ const c = canvas.getContext('2d')
 canvas.width = innerWidth / 1.05
 canvas.height = innerHeight / 1.05
 
+//<summary>
+//Open This With Html Button
+//On Game Stops Close This
+//</summary>
+let isGamePlaying = false
+
 const playerSpeed = 1.5
 const bulletSpeed = 2.5
 const bulletDamage = 1
@@ -16,8 +22,8 @@ class Player{
     constructor(){
         //Pos Middle Of Canvas Left
         this.position = {
-            x: canvas.width / 100,
-            y: canvas.height / 2 - 60  
+            x: 0,
+            y: 0
         }
 
         this.velocity = {
@@ -35,7 +41,7 @@ class Player{
             this.width = image.width * scaleSpaceShip
             this.height = image.height * scaleSpaceShip
             this.position = {
-                x: 0,
+                x: 18,
                 y: canvas.height / 2 - (player.height / 2)
             }
         }
@@ -44,8 +50,9 @@ class Player{
     draw(){
         /*c.fillStyle = 'blue'
         c.fillRect(this.position.x,this.position.y,this.width,this.height)*/
-        c.drawImage(this.image,this.position.x,this.position.y,this.width,this.height)
-    }   
+        if(this.image)
+            c.drawImage(this.image,this.position.x,this.position.y,this.width,this.height)
+    }      
 
     update(){
         if(this.image){
@@ -118,11 +125,9 @@ class Enemy{
     update(){
         if(this.image){
         this.draw()
-        this.position.y += this.velocity.y,
         this.position.x += this.velocity.x
         }
     }
-
 }
 
 c.fillStyle = 'darkblue'
@@ -132,10 +137,12 @@ const player = new Player()
 const bullets = []
 const enemies = []
 
-const enemy = new Enemy()
-enemies.push(enemy)
 
-function fireBullet(){
+function startGame(){
+    isGamePlaying = true
+}
+
+function fireBulletPlayer(){
     if(timerForShootBullet > 0)
         return
     
@@ -158,6 +165,37 @@ function canShootTimer(){
         return
 }
 
+let enemySpawnType = 0
+
+let enemySpawnTimer = 0
+let canSpawnEnemy = true
+
+
+function spawnEnemy(){
+    if(!canSpawnEnemy){
+        enemySpawnTimerFunc()
+        return
+    }
+    canSpawnEnemy = false
+
+    enemySpawnTimer = 250
+
+    enemies.push(new Enemy())
+}
+
+function enemySpawnTimerFunc(){
+    if(canSpawnEnemy)
+    {
+        enemySpawnTimer = 0
+        return
+    }
+    
+    --enemySpawnTimer
+
+    if(enemySpawnTimer <= 0){
+        canSpawnEnemy = true
+    }
+}
 
 const keys = {
     w: {
@@ -171,13 +209,23 @@ const keys = {
     }
 }
 
+//Reqursion With Animation Frame
 function animate(){
     requestAnimationFrame(animate)
+
+    if(!isGamePlaying)
+    {
+        c.fillStyle = 'blue'
+        c.fillRect(0,0,canvas.width,canvas.height)
+        player.draw()
+        return
+    }
 
     //BackGround Here
     c.fillStyle = 'darkblue'
     c.fillRect(0, 0, canvas.width,canvas.height)
 
+    //Other Objects Movement
     bullets.forEach(bullet => {
         bullet.update()
     });
@@ -185,7 +233,9 @@ function animate(){
     enemies.forEach(enemy => {
         enemy.update()
     });
+    spawnEnemy()
 
+    //Player Movement
     if(keys.w.pressed && player.position.y >= 0){
         player.velocity.y = -playerSpeed
     }
@@ -195,17 +245,18 @@ function animate(){
     else {
         player.velocity.y = 0
     }
+
     player.update()
-    enemy.update()
     
+    //Fire
     if(keys.space.pressed){
         console.log("Fire")
-        fireBullet()
+        fireBulletPlayer()
         //fireBullet()
     }
-
     canShootTimer()
 }
+
 
 animate()
 
