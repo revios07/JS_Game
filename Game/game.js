@@ -85,7 +85,7 @@ class Enemy{
         //Spawn Pos Right Of Canvas
         this.position = {
             x: canvas.width,
-            y: canvas.height / 2 - 200  
+            y: canvas.height * Math.random()
         }
 
         this.velocity = {
@@ -104,8 +104,12 @@ class Enemy{
             this.height = image.height * scaleSpaceShip
             this.position = {
                 x: canvas.width,
-                y: canvas.height / 2 - (player.height / 2)
+                y: (canvas.height - this.height) * Math.random()
+                //Limit Y For Not Out Of Screen
             }
+
+            console.log(canvas.height)
+            console.log(this.position.y)
         }
     }
 
