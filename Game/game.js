@@ -142,7 +142,7 @@ function fireBullet(){
     bullets.push(new Bullet({
         position: {
             x:player.position.x + 120,
-            y:player.position.y - player.height
+            y:player.position.y + player.height / 2
         },
         velocity: {
             x:bulletSpeed,
