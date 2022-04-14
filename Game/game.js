@@ -44,8 +44,7 @@ class Player{
     draw(){
         /*c.fillStyle = 'blue'
         c.fillRect(this.position.x,this.position.y,this.width,this.height)*/
-        if(this.image)
-            c.drawImage(this.image,this.position.x,this.position.y,this.width,this.height)
+        c.drawImage(this.image,this.position.x,this.position.y,this.width,this.height)
     }   
 
     update(){
@@ -107,17 +106,13 @@ class Enemy{
                 y: (canvas.height - this.height) * Math.random()
                 //Limit Y For Not Out Of Screen
             }
-
-            console.log(canvas.height)
-            console.log(this.position.y)
         }
     }
 
     draw(){
         /*c.fillStyle = 'blue'
         c.fillRect(this.position.x,this.position.y,this.width,this.height)*/
-        if(this.image)
-            c.drawImage(this.image,this.position.x,this.position.y,this.width,this.height)
+        c.drawImage(this.image,this.position.x,this.position.y,this.width,this.height)
     }   
 
     update(){
