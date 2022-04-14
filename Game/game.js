@@ -81,6 +81,48 @@ class Bullet{
 }
 
 class Enemy{
+    constructor(){
+        //Spawn Pos Right Of Canvas
+        this.position = {
+            x: canvas.width,
+            y: canvas.height / 2 - 200  
+        }
+
+        this.velocity = {
+            x:-1,
+            y:0
+        }
+
+        const image = new Image()
+        image.src = './img/enemyspaceship.png'
+
+        image.onload = () => {
+            const scaleSpaceShip = 1
+
+            this.image = image
+            this.width = image.width * scaleSpaceShip
+            this.height = image.height * scaleSpaceShip
+            this.position = {
+                x: canvas.width,
+                y: canvas.height / 2 - (player.height / 2)
+            }
+        }
+    }
+
+    draw(){
+        /*c.fillStyle = 'blue'
+        c.fillRect(this.position.x,this.position.y,this.width,this.height)*/
+        if(this.image)
+            c.drawImage(this.image,this.position.x,this.position.y,this.width,this.height)
+    }   
+
+    update(){
+        if(this.image){
+        this.draw()
+        this.position.y += this.velocity.y,
+        this.position.x += this.velocity.x
+        }
+    }
 
 }
 
@@ -89,6 +131,10 @@ c.fill()
 
 const player = new Player()
 const bullets = []
+const enemies = []
+
+const enemy = new Enemy()
+enemies.push(enemy)
 
 function fireBullet(){
     if(timerForShootBullet > 0)
@@ -97,7 +143,7 @@ function fireBullet(){
     bullets.push(new Bullet({
         position: {
             x:player.position.x + 120,
-            y:player.position.y + player.height / 2
+            y:player.position.y - player.height
         },
         velocity: {
             x:bulletSpeed,
@@ -137,6 +183,10 @@ function animate(){
         bullet.update()
     });
 
+    enemies.forEach(enemy => {
+        enemy.update()
+    });
+
     if(keys.w.pressed && player.position.y >= 0){
         player.velocity.y = -playerSpeed
     }
@@ -147,6 +197,7 @@ function animate(){
         player.velocity.y = 0
     }
     player.update()
+    enemy.update()
     
     if(keys.space.pressed){
         console.log("Fire")
