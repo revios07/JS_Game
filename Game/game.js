@@ -130,6 +130,20 @@ class Enemy{
     }
 }
 
+class Grid{
+    constructor(){
+
+    }
+
+    draw(){
+
+    }
+
+    update(){
+
+    }
+}
+
 c.fillStyle = 'darkblue'
 c.fill()
 
@@ -226,8 +240,18 @@ function animate(){
     c.fillRect(0, 0, canvas.width,canvas.height)
 
     //Other Objects Movement
-    bullets.forEach(bullet => {
-        bullet.update()
+    bullets.forEach((bullet,index) => {
+        if(bullet.position.x + bullet.radius >= canvas.width){
+            setTimeout(() => {
+                bullets.splice(index,1)
+            }, 0.1);
+        }
+        else {
+            
+            bullet.update()
+        }
+
+        //console.log(bullets)
     });
 
     enemies.forEach(enemy => {
