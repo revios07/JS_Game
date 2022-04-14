@@ -87,11 +87,11 @@ class Bullet{
 }
 
 class Enemy{
-    constructor(){
+    constructor(position){
         //Spawn Pos Right Of Canvas
         this.position = {
-            x: canvas.width,
-            y: canvas.height * Math.random()
+            x: position.x,
+            y: position.y
         }
 
         this.velocity = {
@@ -109,8 +109,8 @@ class Enemy{
             this.width = image.width * scaleSpaceShip
             this.height = image.height * scaleSpaceShip
             this.position = {
-                x: canvas.width,
-                y: (canvas.height - this.height) * Math.random()
+                x: this.position.x,
+                y: this.position.y
                 //Limit Y For Not Out Of Screen
             }
         }
@@ -132,7 +132,23 @@ class Enemy{
 
 class Grid{
     constructor(){
+        this.position = {
+            x: canvas.width - 120,
+            y: 0
+        }
 
+        this.velocity = {
+            x: 0,
+            y: 0
+        }
+
+        this.enemies = []
+
+        for(let i = 0; i < 8; ++i){
+            let enemy = new Enemy(this.position)
+            enemy.position.y += (i * 120)
+            this.enemies.push(enemy)
+        }
     }
 
     draw(){
@@ -149,11 +165,13 @@ c.fill()
 
 const player = new Player()
 const bullets = []
-const enemies = []
+const grids = []
+grids.push(new Grid())
 
 
 function startGame(){
     isGamePlaying = true
+    spawnEnemy()
 }
 
 function fireBulletPlayer(){
@@ -186,7 +204,7 @@ let canSpawnEnemy = true
 
 
 function spawnEnemy(){
-    if(!canSpawnEnemy){
+    /*if(!canSpawnEnemy){
         enemySpawnTimerFunc()
         return
     }
@@ -194,7 +212,7 @@ function spawnEnemy(){
 
     enemySpawnTimer = 250
 
-    enemies.push(new Enemy())
+    enemies.push(new Enemy())*/
 }
 
 function enemySpawnTimerFunc(){
@@ -254,10 +272,12 @@ function animate(){
         //console.log(bullets)
     });
 
-    enemies.forEach(enemy => {
-        enemy.update()
+    grids.forEach(grid => {
+        grid.update()
+        grid.enemies.forEach(enemy =>{
+            enemy.update()
+        })
     });
-    spawnEnemy()
 
     //Player Movement
     if(keys.w.pressed && player.position.y >= 0){
