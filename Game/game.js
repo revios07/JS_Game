@@ -95,7 +95,7 @@ class Enemy{
         }
 
         this.velocity = {
-            x:-1,
+            x:0,
             y:0
         }
 
@@ -103,7 +103,7 @@ class Enemy{
         image.src = './img/enemyspaceship.png'
 
         image.onload = () => {
-            const scaleSpaceShip = 1
+            const scaleSpaceShip = 0.6
 
             this.image = image
             this.width = image.width * scaleSpaceShip
@@ -144,10 +144,16 @@ class Grid{
 
         this.enemies = []
 
-        for(let i = 0; i < 8; ++i){
-            let enemy = new Enemy(this.position)
-            enemy.position.y += (i * 120)
-            this.enemies.push(enemy)
+        for(let i = 0; i < 10; ++i){
+            for(let j = 0; j < 5; ++j){
+            
+            var position = {
+                x:canvas.width - 88 - (j * 80), 
+                y:20 + i * 100
+            }
+
+            this.enemies.push(new Enemy(position))
+            }
         }
     }
 
@@ -173,7 +179,6 @@ function startGame(){
     isGamePlaying = true
     spawnEnemy()
 }
-
 function fireBulletPlayer(){
     if(timerForShootBullet > 0)
         return
