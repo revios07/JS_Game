@@ -122,10 +122,11 @@ class Enemy{
         c.drawImage(this.image,this.position.x,this.position.y,this.width,this.height)
     }   
 
-    update(){
+    update({velocity}){
         if(this.image){
         this.draw()
-        this.position.x += this.velocity.x
+        this.position.x += velocity.x
+        this.position.y += velocity.y
         }
     }
 }
@@ -133,19 +134,27 @@ class Enemy{
 class Grid{
     constructor(){
         this.position = {
-            x: canvas.width - 120,
+            x: 0,
             y: 0
         }
 
         this.velocity = {
             x: 0,
-            y: 0
+            y: 1
         }
 
         this.enemies = []
 
-        for(let i = 0; i < 10; ++i){
-            for(let j = 0; j < 5; ++j){
+        const columns = (Math.floor(Math.random() * 6)) + 3
+        const rows = (Math.floor(Math.random() * 5)) + 3
+
+        this.height = columns * (210)
+
+        console.log(rows)
+
+        //Create Enemies Here
+        for(let i = 0; i < columns; ++i){
+            for(let j = 0; j < rows; ++j){
             
             var position = {
                 x:canvas.width - 88 - (j * 80), 
@@ -162,7 +171,21 @@ class Grid{
     }
 
     update(){
+        this.position.x += this.velocity.x,
+        this.position.y += this.velocity.y
 
+        //<summay>
+        //Change Enemy Velocity *-1 When At End Of Canvas
+        //</summary>
+        if(this.position.y + this.height / 2 >= canvas.height) {
+            this.velocity.y *= -1
+        }
+        else if(this.position.y <= 0) {
+            this.velocity.y *= -1
+        }
+        /*console.log("height : " + this.height)
+        console.log("Grid Height : " + this.position.y + this.height)
+        console.log("Canvas Height : " + canvas.height) */
     }
 }
 
@@ -280,7 +303,7 @@ function animate(){
     grids.forEach(grid => {
         grid.update()
         grid.enemies.forEach(enemy =>{
-            enemy.update()
+            enemy.update({velocity : grid.velocity})
         })
     });
 
