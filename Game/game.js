@@ -103,7 +103,7 @@ class Enemy{
         image.src = './img/enemyspaceship.png'
 
         image.onload = () => {
-            const scaleSpaceShip = 0.6
+            const scaleSpaceShip = 0.4
 
             this.image = image
             this.width = image.width * scaleSpaceShip
@@ -140,17 +140,32 @@ class Grid{
 
         this.velocity = {
             x: 0,
-            y: 1.75
+            y: 3.2
         }
 
         this.enemies = []
 
-        const columns = (Math.floor(Math.random() * 6)) + 4
-        const rows = (Math.floor(Math.random() * 2)) + 3
+        var columns = (Math.floor(Math.random() * 8) + 1) 
+        var rows = (Math.floor(Math.random() * 3) + 2)
+        
+        //Columns is Lenght Number Of Enemies
+        this.height = columns * 120
 
-        this.height = columns * (210)
+        if(columns <= 3){
+            columns = 4 + Math.floor(Math.random() * 10)
+        }
+        else if(rows < 3){
+            rows = 1 + Math.floor(Math.random() * 1.5) 
+        }
 
-        console.log(rows)
+        if(columns >= 8) {
+            this.velocity.y /= 2.5
+        }
+        else if(columns >= 5){
+            this.velocity.y /= 1.8
+        }
+
+        console.log(columns)
 
         //Create Enemies Here
         for(let i = 0; i < columns; ++i){
@@ -158,7 +173,7 @@ class Grid{
             
             var position = {
                 x:canvas.width - 88 - (j * 80), 
-                y:20 + i * 100
+                y:20 + i * 55
             }
 
             this.enemies.push(new Enemy(position))
@@ -238,7 +253,7 @@ function enemySpawnTimerFunc(){
 
     if(enemySpawnTimer <= 0){
         grids.push(new Grid())
-        enemySpawnTimer = 1750
+        enemySpawnTimer = 1600
     }
 }
 
@@ -287,8 +302,21 @@ function animate(){
 
     grids.forEach(grid => {
         grid.update()
-        grid.enemies.forEach(enemy =>{
+        grid.enemies.forEach((enemy,i) =>{
             enemy.update({velocity : grid.velocity})
+            
+            bullets.forEach((bullet,j) => {
+                //Collision Check
+                if(bullet.position.y - bullet.radius <= enemy.position.y
+                     && bullet.position.y >= enemy.position.y
+                        && bullet.position.x - bullet.radius >= enemy.position.x ){
+                        setTimeout(() => {
+                            //Remove From List
+                            grid.enemies.splice(i,1)
+                            bullets.splice(j,1)
+                        }, 0);
+                    }
+            })
         })
     });
 
@@ -315,7 +343,6 @@ function animate(){
     }
     canShootTimer()
 }
-
 
 animate()
 
