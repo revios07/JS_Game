@@ -140,13 +140,13 @@ class Grid{
 
         this.velocity = {
             x: 0,
-            y: 1
+            y: 1.75
         }
 
         this.enemies = []
 
-        const columns = (Math.floor(Math.random() * 6)) + 3
-        const rows = (Math.floor(Math.random() * 5)) + 3
+        const columns = (Math.floor(Math.random() * 6)) + 4
+        const rows = (Math.floor(Math.random() * 2)) + 3
 
         this.height = columns * (210)
 
@@ -174,14 +174,18 @@ class Grid{
         this.position.x += this.velocity.x,
         this.position.y += this.velocity.y
 
+        this.velocity.x = 0
+
         //<summay>
         //Change Enemy Velocity *-1 When At End Of Canvas
         //</summary>
         if(this.position.y + this.height / 2 >= canvas.height) {
             this.velocity.y *= -1
+            this.velocity.x += -60
         }
         else if(this.position.y <= 0) {
             this.velocity.y *= -1
+            this.velocity.x += -60
         }
         /*console.log("height : " + this.height)
         console.log("Grid Height : " + this.position.y + this.height)
@@ -195,12 +199,10 @@ c.fill()
 const player = new Player()
 const bullets = []
 const grids = []
-grids.push(new Grid())
 
 
 function startGame(){
     isGamePlaying = true
-    spawnEnemy()
 }
 function fireBulletPlayer(){
     if(timerForShootBullet > 0)
@@ -231,29 +233,12 @@ let enemySpawnTimer = 0
 let canSpawnEnemy = true
 
 
-function spawnEnemy(){
-    /*if(!canSpawnEnemy){
-        enemySpawnTimerFunc()
-        return
-    }
-    canSpawnEnemy = false
-
-    enemySpawnTimer = 250
-
-    enemies.push(new Enemy())*/
-}
-
-function enemySpawnTimerFunc(){
-    if(canSpawnEnemy)
-    {
-        enemySpawnTimer = 0
-        return
-    }
-    
+function enemySpawnTimerFunc(){ 
     --enemySpawnTimer
 
     if(enemySpawnTimer <= 0){
-        canSpawnEnemy = true
+        grids.push(new Grid())
+        enemySpawnTimer = 1750
     }
 }
 
@@ -317,6 +302,8 @@ function animate(){
     else {
         player.velocity.y = 0
     }
+
+    enemySpawnTimerFunc()
 
     player.update()
     
