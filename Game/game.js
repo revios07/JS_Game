@@ -68,21 +68,42 @@ class Bullet{
             this.velocity = velocity        
             
             this.radius = 5
+
+            const image = new Image()
+            image.src = './img/bullet.png'
+    
+            image.onload = () => {
+                const bulletScale = 0.25
+    
+                this.image = image
+                this.width = image.width * bulletScale
+                this.height = image.height * bulletScale
+                this.position = {
+                    x: this.position.x,
+                    y: this.position.y
+                }
+            }
         }
 
         draw(){
-            c.beginPath()
+
+            if(this.image)
+                c.drawImage(this.image,this.position.x,this.position.y,this.width,this.height)
+
+            /*c.beginPath()
             c.arc(this.position.x,this.position.y,this.radius,0,Math.PI * 2)
 
             c.fillStyle = 'red'
             c.fill()
-            c.closePath()
+            c.closePath()*/
         }
 
         update(){
+            if(this.image){
             this.draw()
             this.position.x += this.velocity.x
             this.position.y += this.velocity.y
+            }
         }
 }
 
@@ -149,12 +170,10 @@ class Grid{
         var rows = (Math.floor(Math.random() * 3) + 2)
         
         //Columns is Lenght Number Of Enemies
-        this.height = columns * 120
-
         if(columns <= 3){
             columns = 4 + Math.floor(Math.random() * 10)
         }
-        else if(rows < 3){
+        if(rows < 3){
             rows = 1 + Math.floor(Math.random() * 1.5) 
         }
 
@@ -166,6 +185,7 @@ class Grid{
         }
 
         console.log(columns)
+        this.height = columns * 120
 
         //Create Enemies Here
         for(let i = 0; i < columns; ++i){
@@ -225,8 +245,8 @@ function fireBulletPlayer(){
     
     bullets.push(new Bullet({
         position: {
-            x:player.position.x + 120,
-            y:player.position.y + player.height / 2
+            x:player.position.x + 100,
+            y:player.position.y + player.height / 2 - 16.5
         },
         velocity: {
             x:bulletSpeed,
@@ -253,7 +273,7 @@ function enemySpawnTimerFunc(){
 
     if(enemySpawnTimer <= 0){
         grids.push(new Grid())
-        enemySpawnTimer = 1600
+        enemySpawnTimer = 2250
     }
 }
 
@@ -284,6 +304,34 @@ function animate(){
     //BackGround Here
     c.fillStyle = 'darkblue'
     c.fillRect(0, 0, canvas.width,canvas.height)
+    
+    
+    grids.forEach(grid => {
+        grid.update()
+        grid.enemies.forEach((enemy,i) =>{
+            enemy.update({velocity : grid.velocity})
+            
+            bullets.forEach((bullet,j) => {
+                //Collision Check
+                if(bullet.position.y + bullet.radius <= enemy.position.y + enemy.height
+                     && bullet.position.y + bullet.radius >= enemy.position.y
+                        && bullet.position.x + bullet.radius >= enemy.position.x 
+                            && bullet.position.x <= enemy.position.x + enemy.width){
+                            //Remove From List
+                            bullets.splice(j,1)
+                        setTimeout(() => {
+                            grid.enemies.splice(i,1)
+                        }, 0);
+
+                        return;
+                    }
+
+                    
+            console.log(bullet.position.y)
+            console.log(bullet.position.x)
+            })
+        })
+    });
 
     //Other Objects Movement
     bullets.forEach((bullet,index) => {
@@ -296,28 +344,6 @@ function animate(){
             
             bullet.update()
         }
-
-        //console.log(bullets)
-    });
-
-    grids.forEach(grid => {
-        grid.update()
-        grid.enemies.forEach((enemy,i) =>{
-            enemy.update({velocity : grid.velocity})
-            
-            bullets.forEach((bullet,j) => {
-                //Collision Check
-                if(bullet.position.y - bullet.radius <= enemy.position.y
-                     && bullet.position.y >= enemy.position.y
-                        && bullet.position.x - bullet.radius >= enemy.position.x ){
-                        setTimeout(() => {
-                            //Remove From List
-                            grid.enemies.splice(i,1)
-                            bullets.splice(j,1)
-                        }, 0);
-                    }
-            })
-        })
     });
 
     //Player Movement
