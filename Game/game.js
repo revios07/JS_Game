@@ -12,11 +12,11 @@ canvas.height = innerHeight / 1.05
 let isGamePlaying = false
 
 const playerSpeed = 1.5
-const bulletSpeed = 2.5
+const bulletSpeed = 5
 const bulletDamage = 1
 
 let timerForShootBullet = 50
-const shootForEachFps = 100
+const shootForEachFps = 60
 
 class Player{
     constructor(){
@@ -150,6 +150,40 @@ class Enemy{
         this.position.y += velocity.y
         }
     }
+
+    shootEnemy(enemyBullets){
+        enemyBullets.push(new BulletEnemy({
+            position: {
+                x: this.position.x + this.width / 2,
+                y: this.position.y
+            },velocity:{
+                x:-5,
+                y:0
+            }
+        }))
+    }
+}
+
+class BulletEnemy{
+    constructor({position,velocity}){
+        this.position = position,
+        this.velocity = velocity
+
+        this.width = 15
+        this.height = 5
+        //this.radius = 3
+    }
+
+    draw(){
+        c.fillStyle = 'red'
+        c.fillRect(this.position.x, this.position.y, this.width,this.height)
+    }
+
+    update(){
+        this.draw()
+        this.position.x += this.velocity.x
+        this.position.y += this.velocity.y
+    }
 }
 
 class Grid{
@@ -233,6 +267,7 @@ c.fill()
 
 const player = new Player()
 const bullets = []
+const enemyBullets = []
 const grids = []
 
 
@@ -263,9 +298,11 @@ function canShootTimer(){
 }
 
 let enemySpawnType = 0
-
 let enemySpawnTimer = 0
 let canSpawnEnemy = true
+
+const enemyShootTimeBetweenShoots = 200
+let enemyShootTimer = enemyShootTimeBetweenShoots
 
 
 function enemySpawnTimerFunc(){ 
@@ -298,16 +335,33 @@ function animate(){
         c.fillStyle = 'blue'
         c.fillRect(0,0,canvas.width,canvas.height)
         player.draw()
-        return
+        return;
     }
 
     //BackGround Here
     c.fillStyle = 'darkblue'
     c.fillRect(0, 0, canvas.width,canvas.height)
+
+    enemyBullets.forEach((bullet,index) =>{
+        bullet.update()
+        
+        if(bullet.position.x + this.width > canvas.width){
+            enemyBullets.splice(index,1)
+        }
+    })
     
     
-    grids.forEach(grid => {
+    grids.forEach((grid,gridIndex) => {
         grid.update()
+
+        if(enemyShootTimer <= 0){
+            //Enemy Shoots Here
+            console.log(grid.enemies)
+
+            grid.enemies[Math.floor(Math.random() * Object.keys(grid.enemies).length)].shootEnemy(enemyBullets)
+            enemyShootTimer = enemyShootTimeBetweenShoots
+        }
+
         grid.enemies.forEach((enemy,i) =>{
             enemy.update({velocity : grid.velocity})
             
@@ -318,20 +372,21 @@ function animate(){
                         && bullet.position.x + bullet.radius >= enemy.position.x 
                             && bullet.position.x <= enemy.position.x + enemy.width){
                             //Remove From List
-                            bullets.splice(j,1)
                         setTimeout(() => {
-                            grid.enemies.splice(i,1)
+                            
+                            if(true){
+                                bullets.splice(j,1)
+                                grid.enemies.splice(i,1)
+                            }
                         }, 0);
 
                         return;
                     }
-
-                    
-            console.log(bullet.position.y)
-            console.log(bullet.position.x)
             })
         })
     });
+
+    --enemyShootTimer
 
     //Other Objects Movement
     bullets.forEach((bullet,index) => {
@@ -358,6 +413,7 @@ function animate(){
     }
 
     enemySpawnTimerFunc()
+
 
     player.update()
     
