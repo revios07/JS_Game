@@ -345,23 +345,21 @@ function animate(){
     enemyBullets.forEach((bullet,index) =>{
         bullet.update()
         
-        if(bullet.position.x + this.width > canvas.width){
+        if(bullet.position.x + this.width < 0){
             enemyBullets.splice(index,1)
         }
     })
     
-    
     grids.forEach((grid,gridIndex) => {
         grid.update()
 
-        if(enemyShootTimer <= 0){
+        if(enemyShootTimer <= 0 && grid.enemies.length >1){
             //Enemy Shoots Here
             console.log(grid.enemies)
 
             grid.enemies[Math.floor(Math.random() * Object.keys(grid.enemies).length)].shootEnemy(enemyBullets)
             enemyShootTimer = enemyShootTimeBetweenShoots
         }
-
         grid.enemies.forEach((enemy,i) =>{
             enemy.update({velocity : grid.velocity})
             
@@ -413,7 +411,6 @@ function animate(){
     }
 
     enemySpawnTimerFunc()
-
 
     player.update()
     
