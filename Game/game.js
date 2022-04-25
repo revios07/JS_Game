@@ -186,6 +186,30 @@ class BulletEnemy{
     }
 }
 
+class Particle{
+    constructor({position,velocity,radius,color}){
+        this.position = position
+        this.velocity = velocity
+
+        this.radius = radius
+        this.color = color
+    }
+
+    draw(){
+        c.beginPath()
+        c.arc(this.position.x,this.position.y,this.radius,0,Math.PI * 2)
+        c.fillStyle = this.color
+        c.fill()
+        c.closePath()
+    }
+
+    update(){
+        this.draw()
+        this.position.x += this.velocity.x
+        this.position.y += this.velocity.y
+    }
+}
+
 class Grid{
     constructor(){
         this.position = {
@@ -267,6 +291,7 @@ c.fill()
 
 const player = new Player()
 const bullets = []
+const particles = []
 const enemyBullets = []
 const grids = []
 
@@ -344,6 +369,11 @@ function animate(){
 
     enemyBullets.forEach((bullet,index) =>{
         bullet.update()
+ 
+        if(bullet.position.x + bullet.height / 2 >= player.position.x &&
+            bullet.position.x <= player.x + player.width &&
+                bullet.position.y + width <= player.position.y &&
+                    bullet.position)
         
         if(bullet.position.x + this.width < 0){
             enemyBullets.splice(index,1)
@@ -364,14 +394,30 @@ function animate(){
             enemy.update({velocity : grid.velocity})
             
             bullets.forEach((bullet,j) => {
-                //Collision Check
+                //Collision Check Player Bullet
                 if(bullet.position.y + bullet.radius <= enemy.position.y + enemy.height
                      && bullet.position.y + bullet.radius >= enemy.position.y
                         && bullet.position.x + bullet.radius >= enemy.position.x 
                             && bullet.position.x <= enemy.position.x + enemy.width){
-                            //Remove From List
-                        setTimeout(() => {
                             
+                        for(let i = 0; i < 12; ++i){
+                            particles.push(new Particle({
+                                position:{
+                                    x:enemy.position.x - (enemy.height / 2),
+                                    y:enemy.position.y - (enemy.width / 2)
+                                },
+                                velocity:{
+                                    x:(Math.random() - 0.5) * 1,
+                                    y:(Math.random() - 0.5) * 1
+                                },
+                                radius:Math.random() * 3 + 5,
+                                color:'yellow'
+
+                            }))
+                        }
+                                
+                            //Remove From List
+                            setTimeout(() => {
                             if(true){
                                 bullets.splice(j,1)
                                 grid.enemies.splice(i,1)
@@ -383,6 +429,10 @@ function animate(){
             })
         })
     });
+
+    particles.forEach(particle => {
+        particle.update()
+    })
 
     --enemyShootTimer
 
