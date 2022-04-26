@@ -367,14 +367,18 @@ function animate(){
     c.fillStyle = 'darkblue'
     c.fillRect(0, 0, canvas.width,canvas.height)
 
+    //Enemy Bullet Collision Check With Player
     enemyBullets.forEach((bullet,index) =>{
         bullet.update()
- 
-        if(bullet.position.x + bullet.height / 2 >= player.position.x &&
-            bullet.position.x <= player.x + player.width &&
-                bullet.position.y + width <= player.position.y &&
-                    bullet.position)
-        
+        if(bullet.position.y + bullet.height <= player.position.y + player.height
+            && bullet.position.y + bullet.width >= player.position.y
+               && bullet.position.x + bullet.height >= player.position.x 
+                   && bullet.position.x <= player.position.x + player.width){
+                        isGamePlaying = false
+                    }
+
+        //console.log(bullet.position.x + " yy : " + bullet.position.y)
+        console.log(player.position.x + " y Player : " + player.position.y)
         if(bullet.position.x + this.width < 0){
             enemyBullets.splice(index,1)
         }
