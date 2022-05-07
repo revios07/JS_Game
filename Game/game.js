@@ -328,6 +328,21 @@ function canShootTimer(){
         return
 }
 
+for(let i= 0; i < 80; ++i){
+    particles.push(new Particle({
+        position:{
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height
+        },
+        velocity:{
+            x: 0,
+            y: 1
+        },
+        radius: Math.random() * 3,
+        color: 'white'
+    }))
+}
+
 let enemySpawnType = 0
 let enemySpawnTimer = 0
 let canSpawnEnemy = true
