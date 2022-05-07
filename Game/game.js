@@ -187,13 +187,14 @@ class BulletEnemy{
 }
 
 class Particle{
-    constructor({position,velocity,radius,color}){
+    constructor({position,velocity,radius,color, isBackGround}){
         this.position = position
         this.velocity = velocity
 
         this.radius = radius
         this.color = color
         this.opacity = 1
+        this.isBackGround = isBackGround
     }
 
     draw(){
@@ -212,7 +213,9 @@ class Particle{
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
+        if(!this.isBackGround){
         this.opacity -= 0.004
+        }
     }
 }
 
@@ -328,18 +331,19 @@ function canShootTimer(){
         return
 }
 
-for(let i= 0; i < 80; ++i){
+for(let i= 0; i < 120; ++i){
     particles.push(new Particle({
         position:{
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height
         },
         velocity:{
-            x: 0,
-            y: 1
+            x: -1,
+            y: 0
         },
         radius: Math.random() * 3,
-        color: 'white'
+        color: 'white',
+        isBackGround: true
     }))
 }
 
@@ -436,7 +440,8 @@ function animate(){
                                     y:(Math.random() - 0.5) * 1
                                 },
                                 radius:Math.random() * 3 + 5,
-                                color:'gray'
+                                color:'gray',
+                                isBackGround: false
 
                             }))
                         }
@@ -456,6 +461,15 @@ function animate(){
     });
 
     particles.forEach((particle,i) => {
+
+        if(particle.position.x - particle.radius <= 0){
+
+            if(particle.isBackGround){
+            particle.position.x = ((Math.random() + 0.6) / 1.2) * canvas.width
+            }
+
+        }
+
         if(particle.opacity <= 0){
             setTimeout(() => {
                 particles.splice(i,1)
