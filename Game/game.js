@@ -31,6 +31,9 @@ class Player{
             y:0
         }
 
+        this.rotation = 0
+        this.opacity = 1
+
         const image = new Image()
         image.src = './img/spaceship.png'
 
@@ -48,10 +51,24 @@ class Player{
     }
 
     draw(){
+        c.save()
+        c.globalAlpha = this.opacity
+        c.translate(
+            player.position.x + player.width / 2,
+            player.position.y + player.height / 2
+        )
+        c.rotate(this.rotation)
+        c.translate(
+            -player.position.x - player.width / 2,
+            -player.position.y - player.height / 2
+        )
+
         /*c.fillStyle = 'blue'
         c.fillRect(this.position.x,this.position.y,this.width,this.height)*/
         if(this.image)
             c.drawImage(this.image,this.position.x,this.position.y,this.width,this.height)
+
+        c.restore()
     }      
 
     update(){
@@ -498,12 +515,15 @@ function animate(){
     //Player Movement
     if(keys.w.pressed && player.position.y >= 0){
         player.velocity.y = -playerSpeed
+        player.rotation = -0.2
     }
     else if(keys.s.pressed && player.position.y <= canvas.height - player.image.height){
         player.velocity.y = playerSpeed
+        player.rotation = 0.2
     }
     else {
         player.velocity.y = 0
+        player.rotation = 0.0
     }
 
     enemySpawnTimerFunc()
