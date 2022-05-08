@@ -10,6 +10,7 @@ canvas.height = innerHeight / 1.05
 //On Game Stops Close This
 //</summary>
 let isGamePlaying = false
+let isGameOver = false
 
 const playerSpeed = 1.5
 const bulletSpeed = 5
@@ -416,10 +417,28 @@ function animate(){
             && bullet.position.y + bullet.width >= player.position.y
                && bullet.position.x + bullet.height >= player.position.x 
                    && bullet.position.x <= player.position.x + player.width){
-                        isGamePlaying = false
+                            //Player Dead Here
+                            player.opacity = 0
+                            isGameOver = true
+                            //isGamePlaying = false
+
+                            for(let i = 0; i < 12; ++i){
+                                particles.push(new Particle({
+                                    position:{
+                                        x:player.position.x + (player.height / 2),
+                                        y:player.position.y + (player.width / 2)
+                                    },
+                                    velocity:{
+                                        x:(Math.random() - 0.5) * 1,
+                                        y:(Math.random() - 0.5) * 1
+                                    },
+                                    radius:Math.random() * 3 + 5,
+                                    color:'green',
+                                    isBackGround: false
+                                }))
+                            }
                     }
 
-        //console.log(bullet.position.x + " yy : " + bullet.position.y)
         console.log(player.position.x + " y Player : " + player.position.y)
         if(bullet.position.x + this.width < 0){
             enemyBullets.splice(index,1)
@@ -445,7 +464,8 @@ function animate(){
                      && bullet.position.y + bullet.radius >= enemy.position.y
                         && bullet.position.x + bullet.radius >= enemy.position.x 
                             && bullet.position.x <= enemy.position.x + enemy.width){
-                            
+                        
+                        //Player Hits Enemy
                         for(let i = 0; i < 12; ++i){
                             particles.push(new Particle({
                                 position:{
@@ -546,6 +566,10 @@ animate()
 //</summary>
 addEventListener('keydown', ({key}) => {
     console.log(key)
+    if(isGameOver){
+        return
+    }
+
     switch(key){
         case  "ArrowUp":
             {
