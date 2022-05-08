@@ -3,7 +3,24 @@
 
     </head>
     <body>
-      <canvas id="canvas0" width=800 height=600></canvas>
+
+      <style>
+        body{
+          margin: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      </style>
+      <div style="position: relative;">
+        <p
+         style = "position: fixed; z-index: 10; color: white; left:10px; top:10px; margin: 0; font-family: fantasy; font-size: 30px;">
+        <span>Score:</span>
+        <span id="scoreIndex">0</span>
+        </p>
+      </div>
+
+      <canvas></canvas>
 
       <span class='menu'>
         <input class='but' id='but1' type='button' onclick="startGame()" value='Start Game'>

@@ -1,4 +1,5 @@
 const canvas = document.querySelector('canvas')
+const scoreIndex = document.querySelector('#scoreIndex')
 const c = canvas.getContext('2d')
 
 
@@ -11,6 +12,9 @@ canvas.height = innerHeight / 1.05
 //</summary>
 let isGamePlaying = false
 let isGameOver = false
+let isPlayerDead = false
+
+let score = 0
 
 const playerSpeed = 1.5
 const bulletSpeed = 5
@@ -396,18 +400,21 @@ const keys = {
 
 //Reqursion With Animation Frame
 function animate(){
+    if(isPlayerDead)
+        return
+
     requestAnimationFrame(animate)
 
     if(!isGamePlaying)
     {
-        c.fillStyle = 'blue'
+        c.fillStyle = 'darkblue'
         c.fillRect(0,0,canvas.width,canvas.height)
         player.draw()
         return;
     }
 
     //BackGround Here
-    c.fillStyle = 'darkblue'
+    c.fillStyle = 'black'
     c.fillRect(0, 0, canvas.width,canvas.height)
 
     //Enemy Bullet Collision Check With Player
@@ -418,11 +425,26 @@ function animate(){
                && bullet.position.x + bullet.height >= player.position.x 
                    && bullet.position.x <= player.position.x + player.width){
                             //Player Dead Here
+                            if(isGameOver)
+                                return
+
                             player.opacity = 0
                             isGameOver = true
+                            setTimeout(() => {
+
+                                /*bullets.forEach((bullet,i) => {
+                                    bullets.splice(i,1)
+                                })
+
+                                enemyBullets.forEach((bullet,i) => {
+                                    enemyBullets.splice(i,1)
+                                })*/
+
+                                isPlayerDead = true
+                            }, 2000);
                             //isGamePlaying = false
 
-                            for(let i = 0; i < 12; ++i){
+                            for(let i = 0; i < 30; ++i){
                                 particles.push(new Particle({
                                     position:{
                                         x:player.position.x + (player.height / 2),
@@ -433,7 +455,7 @@ function animate(){
                                         y:(Math.random() - 0.5) * 1
                                     },
                                     radius:Math.random() * 3 + 5,
-                                    color:'green',
+                                    color:'blue',
                                     isBackGround: false
                                 }))
                             }
@@ -464,6 +486,12 @@ function animate(){
                      && bullet.position.y + bullet.radius >= enemy.position.y
                         && bullet.position.x + bullet.radius >= enemy.position.x 
                             && bullet.position.x <= enemy.position.x + enemy.width){
+                        
+                        if(!isGameOver){
+                        score += 1000 * Math.random()
+                        score = Math.floor(score)
+                        scoreIndex.innerHTML = score.toString()
+                        }
                         
                         //Player Hits Enemy
                         for(let i = 0; i < 12; ++i){
